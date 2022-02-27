@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: db-mysql
+    restart: always
+    tty: true
+    volumes:
+      - ./scripts/table.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=desafiodb
+      - MYSQL_ROOT_PASSWORD=desafio
+    ports:
+      - "3307:3306"
+    networks:
+      - desafio-network
+
+networks:
+  desafio-network:
+    driver: bridge
