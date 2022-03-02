@@ -18,6 +18,10 @@ services:
     build:
       context: ./node
     container_name: nodesvr
+<<<<<<< HEAD
+=======
+    image: cljos/app-node
+>>>>>>> 674908f (chore: config project)
     hostname: nodesvr
     networks:
       - desafio_network
@@ -29,14 +33,16 @@ services:
     depends_on:
       - db
   db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    build:
+      context: ./mysql
+    image: cljos/db-mysql
     container_name: db-mysql
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
     tty: true
     volumes:
       - ./scripts/table.sql:/docker-entrypoint-initdb.d/1.sql
-      - ./mysql:/var/lib/mysql
+      - ./mysql/db:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=desafiodb
       - MYSQL_ROOT_PASSWORD=desafio
