@@ -1,6 +1,33 @@
 version: '3'
 
 services:
+  nginx:
+    build: 
+      context: ./nginx
+    image: cljos/nginx-node
+    container_name: nginx-node
+    hostname: nginx-node
+    restart: always
+    networks:
+      - desafio_network
+    ports: 
+      - "8080:80"
+    depends_on:
+      - app
+  app:
+    build:
+      context: ./node
+    container_name: nodesvr
+    hostname: nodesvr
+    networks:
+      - desafio_network
+    volumes:
+      - ./node:/usr/src/app
+    tty: true
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
   db:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
@@ -13,11 +40,9 @@ services:
     environment:
       - MYSQL_DATABASE=desafiodb
       - MYSQL_ROOT_PASSWORD=desafio
-    ports:
-      - "3307:3306"
     networks:
-      - desafio-network
+      - desafio_network
 
 networks:
-  desafio-network:
+  desafio_network:
     driver: bridge
